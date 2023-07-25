@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -29,12 +30,13 @@ Route::prefix('v1')->namespace('Api')->group( function () {
     });
 
 
-    /*Route::prefix('supplier')->name('supplier.')->group(function () {
-        Route::post('/', [SomeController::class, 'store'])->name('create');
-        Route::get('/', [SomeController::class, 'index'])->name('getAll');
-        Route::get('/{id}', [SomeController::class, 'show'])->name('get')->where(['id' => '[0-9]+']);
-        Route::put('/{id}', [SomeController::class, 'update'])->name('update')->where(['id' => '[0-9]+']);
-        Route::delete('/{id}', [SomeController::class, 'destroy'])->name('delete')->where(['id' => '[0-9]+']);
-    });*/
+    Route::prefix('account')->name('account.')->group(function () {
+
+        Route::post('/deposit', [AccountController::class, 'deposit'])->name('deposit');
+        Route::post('/withdraw', [AccountController::class, 'withdraw'])->name('withdraw');
+
+        Route::get('/balance', [AccountController::class, 'balance'])->name('balance');
+    });
+
 
 });
