@@ -1,0 +1,56 @@
+version: "3.9"
+
+services:
+    nginx:
+        build: ./compose/nginx
+        depends_on:
+            - php
+        ports:
+            - "8080:80"
+        networks:
+            - laravel
+        volumes:
+            - ./:/var/www/html/
+            - ./logs/nginx:/var/log/nginx/
+        container_name: nginx
+
+    php:
+        build:
+            context: .
+            dockerfile: compose/php/Dockerfile
+        networks:
+            - laravel
+        volumes:
+            - ./:/var/www/html/
+            - ./logs/php.log:/var/log/fpm-php.www.log
+        container_name: php
+        expose:
+            - "9000"
+
+    redis:
+        image: redis
+        container_name: redis
+        command:
+            - /bin/sh
+            - -c
+            - redis-server --requirepass "$${REDIS_PASSWORD:?REDIS_PASSWORD variable is not set}"
+        env_file:
+            - .env
+        environment:
+            REDIS_PASSWORD: ${REDIS_PASSWORD}
+            REDIS_PORT: ${REDIS_PORT}
+            REDIS_HOST: '%'
+        ports:
+            - "${REDIS_PORT}:${REDIS_PORT}"
+        networks:
+            - laravel
+        volumes:
+            - redis_data:/data
+
+
+volumes:
+    redis_data:
+
+networks:
+    laravel:
+        driver: bridge
