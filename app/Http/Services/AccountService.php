@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Services;
 
 use App\Models\Account;
+use App\Models\User;
 
 class AccountService extends BaseService
 {
@@ -15,7 +16,7 @@ class AccountService extends BaseService
         parent::__construct($model, ["balance", "user_id"]);
     }
 
-    public function updateBalance(int $amount, $user) {
+    public function updateBalance(int $amount,  $user) {
 
         $account = $user->account;
 
@@ -42,8 +43,14 @@ class AccountService extends BaseService
         return ['message' => 'Invalid withdraw amount', 'status' => 400];
     }
 
-    public function deposit(int $amount, $user) {
-        $account = $user->account;
+    public function deposit(int $amount,  $user) {
+
+        if(empty($user->account)){
+            $account = $this->model->create(['balance' => $amount, "user_id" => $user->id]);
+        } else {
+            $account = $user->account;
+        }
+
 
         if ($amount > 0) {
             $newBalance = $account->balance + $amount;

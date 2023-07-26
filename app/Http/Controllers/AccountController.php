@@ -3,12 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Enums\HttpStatusCodes;
+use App\Http\Requests\Account\Deposit;
 use App\Http\Requests\Account\Withdraw;
 use App\Http\Services\AccountService;
-use App\Http\Services\UserService;
 use App\Models\Account;
 use App\Models\User;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -30,27 +29,36 @@ class AccountController extends Controller
         if ($validate->fails())
             return $this->error($this->BodyErrorMessage($validate->messages()->all()), HttpStatusCodes::UnprocessableEnttiy);
 
-        $data = $this->service->updateBalance($request->input("amount"), $request->user());
+        $data = $this->service->updateBalance($request->input("amount"), auth('api')->user());
 
-        return $this->success([$data["message"]],  $data["status"]);
+        if ($data["status"] != 200)  {
+            return $this->error(["data" => $data["message"]],  $data["status"]);
+        }
+        return $this->success(["data" => $data["message"]],  $data["status"]);
 
     }
 
     public function deposit(Request $request)
     {
-        $validate = Validator::make($request->all(), Withdraw::rules());
+        $validate = Validator::make($request->all(), Deposit::rules());
 
         if ($validate->fails())
             return $this->error($this->BodyErrorMessage($validate->messages()->all()), HttpStatusCodes::UnprocessableEnttiy);
 
-        $data = $this->service->deposit($request->input("amount"), $request->user());
+        $data = $this->service->deposit($request->input("amount"), $request->user("api") );
 
-        return $this->success([$data["message"]],  $data["status"]);
+        if ($data["status"] != 200)  {
+            return $this->error(["data" => $data["message"]],  $data["status"]);
+        }
+
+        return $this->success(["data" => $data["message"]],  $data["status"]);
 
     }
 
-    public function balance(Request $request): JsonResponse
+    public function balance(Request $request)
     {
-        return response()->json(['balance' => $request->user()->account->balance], 200);
+        $user = auth('api')->user();
+        $balance = User::find($user)->first()->account->balance;
+        return $this->success(['balance' => $balance], 200);
     }
 }

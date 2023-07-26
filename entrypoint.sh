@@ -5,6 +5,8 @@ chmod -R 777 /var/www/html/bootstrap/cache
 
 cd /var/www/html && composer install
 
+php artisan optimize:clear
+
 php artisan key:generate
 
 php artisan migrate
