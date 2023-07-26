@@ -63,3 +63,8 @@
 172.19.0.1 - - [26/Jul/2023:08:53:05 +0000] "GET /api/v1/user/ HTTP/1.1" 500 250 "-" "PostmanRuntime/7.32.3" "-"
 172.19.0.1 - - [26/Jul/2023:08:55:00 +0000] "GET /api/v1/user/ HTTP/1.1" 200 167 "-" "PostmanRuntime/7.32.3" "-"
 172.19.0.1 - - [26/Jul/2023:08:55:08 +0000] "GET /api/v1/account/balance/ HTTP/1.1" 200 32 "-" "PostmanRuntime/7.32.3" "-"
+172.20.0.1 - - [26/Jul/2023:09:05:55 +0000] "POST /api/v1/signup/ HTTP/1.1" 202 144 "-" "PostmanRuntime/7.32.3" "-"
+172.20.0.1 - - [26/Jul/2023:09:05:58 +0000] "POST /api/v1/login/ HTTP/1.1" 400 64 "-" "PostmanRuntime/7.32.3" "-"
+172.20.0.1 - - [26/Jul/2023:09:06:03 +0000] "POST /api/v1/login/ HTTP/1.1" 500 1090202 "-" "PostmanRuntime/7.32.3" "-"
+172.20.0.1 - - [26/Jul/2023:09:08:32 +0000] "POST /api/v1/login/ HTTP/1.1" 500 1105869 "-" "PostmanRuntime/7.32.3" "-"
+172.20.0.1 - - [26/Jul/2023:09:08:55 +0000] "POST /api/v1/login/ HTTP/1.1" 200 1088 "-" "PostmanRuntime/7.32.3" "-"

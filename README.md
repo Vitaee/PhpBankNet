@@ -21,46 +21,37 @@ Laravel is a web application framework with expressive, elegant syntax. We belie
 
 Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
-## Learning Laravel
+## Project Initialization
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+First of all please craete the database schema you want to use. 
+- I used `banknet_dev` for development, `banknet_test` for unit testing.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+I assume you have docker installed on your computer if it so please run below commands:
+- `docker compose build`, will build the project.
+- `docker compose up`, and your project is ready and awaiting your requests at `localhost:8080`!
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Run unit tests
+Firstly, connect to running docker container:
+- `sudo docker exec -it php /bin/sh` then simple run test command: `php artisan test`.
 
-## Laravel Sponsors
+I created unit tests and postman doc for this project and i tried to apply best practices. I hope you will like this project.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+### Passport Authentication
+If you face any error about the authentication you may need to run `php artisan passport:install` and then you will need to copy paste outputs to your `.env` file.
 
-### Premium Partners
+sample output of passport:install:
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+```bash
+Personal access client created successfully.
+Client ID: 99bcd175-3ac8-4a6b-bbfa-d8271a2ec1ec
+Client secret: kJWDbpBdwughu6WWHi5uoI9TyAkl6BAOY5w4EUrB
+Password grant client created successfully.
+Client ID: 99bcd175-b715-4b1a-b9a7-73e4e845fe08
+Client secret: tPh6HJ5WLS0S0EUvGyhkSZWMaOy9Ht9NWmGYZULX
+```
 
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Copy the ``first ID`` and ``` first Secret``` to your env file like below:
+```env
+PASSPORT_PERSONAL_ACCESS_CLIENT_ID="99bcd175-3ac8-4a6b-bbfa-d8271a2ec1ec"
+PASSPORT_PERSONAL_ACCESS_CLIENT_SECRET="kJWDbpBdwughu6WWHi5uoI9TyAkl6BAOY5w4EUrB"
+```
