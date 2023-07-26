@@ -11,7 +11,7 @@ class SignupRules extends FormRequest
     {
         return [
             'name' => 'required|string',
-            'email' => 'required|string',
+            'email' => 'email|required|unique:users',
             'password' => 'required|string',
             'confirmation_password' => 'required|string'
         ];

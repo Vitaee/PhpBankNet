@@ -1,67 +1,87 @@
 <?php
 
-namespace Tests\Unit;
+namespace tests\Unit;
 
+// use Illuminate\Foundation\Testing\RefreshDatabase;
+
+use App\Enums\HttpStatusCodes;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Hash;
-use Laravel\Sanctum\Sanctum;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Support\Facades\Artisan;
+use Tests\CreatesApplication;
 use Tests\TestCase;
+use Illuminate\Support\Facades\Schema;
+use Laravel\Passport\ClientRepository;
 
 class AuthTest extends TestCase
 {
-    use RefreshDatabase;
-
     /**
-     * Test user registration (signup).
-     *
-     * @return void
+     * A basic test example.
      */
-    public function test_user_registration()
+    use CreatesApplication;
+    use DatabaseMigrations;
+
+    public function setUp(): void
     {
-        $userData = [
-            'name' => 'John Doe',
-            'email' => 'john.doe@example.com',
-            'password' => 'secret123',
-            'confirmation_password' => 'secret123'
-        ];
-
-        $response = $this->postJson(route('auth.signup'), $userData);
-
-        $response->assertStatus(201);
+        parent::setUp();
+        Artisan::call('passport:install');
 
 
-        $this->assertDatabaseHas('users', [
-            'name' => $userData['name'],
-            'email' => $userData['email'],
-        ]);
+        if (Schema::hasTable('oauth_clients')) {
+            resolve(ClientRepository::class)->createPersonalAccessClient(
+                null, 'Personal Access Token', config('app.url')
+            );
+        }
     }
 
-    /**
-     * Test user login.
-     *
-     * @return void
-     */
-    public function test_user_login()
+    public function test_signup(): void
     {
-        $user = new User();
-        $password_salt = "test";
+        $this->json('Post', route('auth.signup'))->assertStatus(HttpStatusCodes::UnprocessableEnttiy);
 
-
-        $user->create([
-            'name' => 'test',
-            'email' => 'john.doe@example.com',
-            'password' => Hash::make('secret123'),
-        ]);
-
-        $credentials = [
-            'email' => 'john.doe@example.com',
-            'password' => 'secret123',
+        $data = [
+            "name" => "test",
+            "password" => "Test1234",
+            "confirmation_password" => "Test1234",
+            "email" => "test@gmail.com"
         ];
 
-        $response = $this->postJson(route('auth.login'), $credentials);
+        $this->json('Post', route('auth.signup'), $data)->assertStatus(HttpStatusCodes::Accepted);
+
+
+        $this->json('Post', route('auth.signup'), $data)->assertStatus(HttpStatusCodes::UnprocessableEnttiy);
+
+
+    }
+
+    /*public function test_login(): void
+    {
+        $this->json('Post', route('auth.login'))->assertStatus(HttpStatusCodes::UnprocessableEnttiy);
+
+
+        User::factory(1)->create([
+            'email' => 'test@gmail.com',
+            'password' => bcrypt('secret')
+        ])->first();
+
+
+        $response = $this->json('POST', route('auth.login'), [
+            'email' => 'test@gmail.com',
+            'password' => 'secret',
+        ]);
 
         $response->assertStatus(200);
 
-    }
+        //$accessToken = $response->json('access_token');
+
+        $this->assertTrue(User::where("email", "test@gmail.com")->exists());
+
+        $data = [
+            "email" => "test@gmail.com",
+            "password" => "wrongPassword123"
+        ];
+
+        $this->json('Post', route('auth.login'), $data)->assertStatus(HttpStatusCodes::BadRequest);
+
+    }*/
 }

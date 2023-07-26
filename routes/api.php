@@ -16,27 +16,21 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
-
-
-Route::post('login', [AuthController::class, 'login'])->name('auth.login');
-Route::post('signup', [AuthController::class, 'signup'])->name('auth.signup');
-
-
 Route::prefix('v1')->namespace('Api')->group( function () {
 
-    Route::middleware('auth:sanctum')->name('user.')->group(function () {
+    Route::post('login', [AuthController::class, 'login'])->name('auth.login');
+    Route::post('signup', [AuthController::class, 'signup'])->name('auth.signup');
+
+    Route::middleware('auth:api')->group(function () {
+
         Route::get("user", [AuthController::class, 'getInfo'])->name('user');
+
+        Route::prefix('account')->name('account.')->group(function () {
+            Route::post('deposit', [AccountController::class, 'deposit'])->name('deposit');
+            Route::post('withdraw', [AccountController::class, 'withdraw'])->name('withdraw');
+            Route::get('balance', [AccountController::class, 'balance'])->name('balance');
+        });
+
     });
-
-
-    Route::prefix('account')->name('account.')->group(function () {
-
-        Route::post('/deposit', [AccountController::class, 'deposit'])->name('deposit');
-        Route::post('/withdraw', [AccountController::class, 'withdraw'])->name('withdraw');
-
-        Route::get('/balance', [AccountController::class, 'balance'])->name('balance');
-    });
-
 
 });
